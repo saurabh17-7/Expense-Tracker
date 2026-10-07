@@ -1,5 +1,5 @@
 // API Configuration
-const API_ENDPOINT = "https://vntwsfhnwj.execute-api.ap-south-1.amazonaws.com/prod";
+const API_URL = "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod";
 
 // Check authentication on page load
 window.onload = function() {

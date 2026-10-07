@@ -1,4 +1,4 @@
-const API_ENDPOINT_EXPENSES = "https://vntwsfhnwj.execute-api.ap-south-1.amazonaws.com/prod"; // GET expenses
+const API_ENDPOINT_EXPENSES = "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod"; // GET expenses
 const API_ENDPOINT_LIMITS = "https://xfwkju2t96.execute-api.ap-south-1.amazonaws.com/prod";   // GET limits
 
 const idToken = sessionStorage.getItem("idToken");
