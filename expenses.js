@@ -1,13 +1,19 @@
 window.onload = function () {
 
-  // API Configuration
+  // =========================================================
+  // API CONFIGURATION
+  // =========================================================
+
   const API_URL =
     "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod/expenses";
 
   let allExpenses = [];
   let filteredExpenses = [];
 
-  // Check if user is authenticated
+  // =========================================================
+  // CHECK AUTHENTICATION
+  // =========================================================
+
   const idToken = sessionStorage.getItem("idToken");
 
   if (!idToken) {
@@ -16,11 +22,18 @@ window.onload = function () {
     return;
   }
 
-  // Load expenses on page load
+  // =========================================================
+  // LOAD EXPENSES
+  // =========================================================
+
   loadExpenses();
 
-  // Search functionality
-  const searchInput = document.getElementById("searchInput");
+  // =========================================================
+  // SEARCH
+  // =========================================================
+
+  const searchInput =
+    document.getElementById("searchInput");
 
   if (searchInput) {
     searchInput.addEventListener("input", function () {
@@ -28,8 +41,12 @@ window.onload = function () {
     });
   }
 
-  // Sort functionality
-  const sortSelect = document.getElementById("sortSelect");
+  // =========================================================
+  // SORT
+  // =========================================================
+
+  const sortSelect =
+    document.getElementById("sortSelect");
 
   if (sortSelect) {
     sortSelect.addEventListener("change", function () {
@@ -43,10 +60,33 @@ window.onload = function () {
 
   function loadExpenses() {
 
-    document.getElementById("loadingMessage").style.display = "block";
-    document.getElementById("expensesTable").style.display = "none";
-    document.getElementById("noExpensesMessage").style.display = "none";
-    document.getElementById("errorMessage").style.display = "none";
+    const loadingMessage =
+      document.getElementById("loadingMessage");
+
+    const expensesTable =
+      document.getElementById("expensesTable");
+
+    const noExpensesMessage =
+      document.getElementById("noExpensesMessage");
+
+    const errorMessage =
+      document.getElementById("errorMessage");
+
+    if (loadingMessage) {
+      loadingMessage.style.display = "block";
+    }
+
+    if (expensesTable) {
+      expensesTable.style.display = "none";
+    }
+
+    if (noExpensesMessage) {
+      noExpensesMessage.style.display = "none";
+    }
+
+    if (errorMessage) {
+      errorMessage.style.display = "none";
+    }
 
     const requestConfig = {
       method: "GET",
@@ -57,16 +97,24 @@ window.onload = function () {
       }
     };
 
-    console.log("GET Expenses URL:", API_URL);
+    console.log(
+      "GET Expenses URL:",
+      API_URL
+    );
 
     fetch(API_URL, requestConfig)
 
       .then(response => {
 
-        console.log("GET response status:", response.status);
+        console.log(
+          "GET response status:",
+          response.status
+        );
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          throw new Error(
+            `HTTP error! status: ${response.status}`
+          );
         }
 
         return response.json();
@@ -74,22 +122,31 @@ window.onload = function () {
 
       .then(data => {
 
-        console.log("GET expenses response:", data);
+        console.log(
+          "GET expenses response:",
+          data
+        );
 
-        // Handle different response formats
         let expenses = [];
 
-        // Case 1: Direct array
+        // =====================================================
+        // RESPONSE FORMAT 1
+        // Direct array
+        // =====================================================
+
         if (Array.isArray(data)) {
 
           expenses = data;
 
         }
 
-        // Case 2: { expenses: [...] }
+        // =====================================================
+        // RESPONSE FORMAT 2
+        // { expenses: [...] }
+        // =====================================================
+
         else if (
           data &&
-          data.expenses &&
           Array.isArray(data.expenses)
         ) {
 
@@ -97,8 +154,15 @@ window.onload = function () {
 
         }
 
-        // Case 3: API Gateway Lambda response
-        else if (data && data.body) {
+        // =====================================================
+        // RESPONSE FORMAT 3
+        // API Gateway body
+        // =====================================================
+
+        else if (
+          data &&
+          data.body
+        ) {
 
           try {
 
@@ -131,34 +195,45 @@ window.onload = function () {
           }
         }
 
+        // =====================================================
+        // STORE DATA
+        // =====================================================
+
         allExpenses = expenses;
+
         filteredExpenses = [...allExpenses];
 
-        // Hide loading
-        document.getElementById("loadingMessage").style.display = "none";
+        if (loadingMessage) {
+          loadingMessage.style.display = "none";
+        }
 
-        // No expenses
+        // =====================================================
+        // NO EXPENSES
+        // =====================================================
+
         if (allExpenses.length === 0) {
 
-          document.getElementById(
-            "noExpensesMessage"
-          ).style.display = "block";
+          if (noExpensesMessage) {
+            noExpensesMessage.style.display = "block";
+          }
 
-          // Update cards to zero
           updateSummaryCards();
 
         }
 
-        // Expenses found
+        // =====================================================
+        // EXPENSES FOUND
+        // =====================================================
+
         else {
 
           updateSummaryCards();
 
           filterAndDisplayExpenses();
 
-          document.getElementById(
-            "expensesTable"
-          ).style.display = "table";
+          if (expensesTable) {
+            expensesTable.style.display = "table";
+          }
         }
       })
 
@@ -169,18 +244,17 @@ window.onload = function () {
           error
         );
 
-        document.getElementById(
-          "loadingMessage"
-        ).style.display = "none";
+        if (loadingMessage) {
+          loadingMessage.style.display = "none";
+        }
 
-        document.getElementById(
-          "errorMessage"
-        ).style.display = "block";
+        if (errorMessage) {
 
-        document.getElementById(
-          "errorMessage"
-        ).textContent =
-          `Error loading expenses: ${error.message}`;
+          errorMessage.style.display = "block";
+
+          errorMessage.textContent =
+            `Error loading expenses: ${error.message}`;
+        }
       });
   }
 
@@ -190,20 +264,23 @@ window.onload = function () {
 
   function updateSummaryCards() {
 
-    const total = allExpenses.reduce(
-      (sum, expense) => {
+    const total =
+      allExpenses.reduce(
+        (sum, expense) => {
 
-        const amount =
-          parseFloat(expense.amount || 0);
+          const amount =
+            parseFloat(
+              expense.amount || 0
+            );
 
-        return sum + (
-          isNaN(amount) ? 0 : amount
-        );
-      },
-      0
-    );
+          return sum +
+            (isNaN(amount) ? 0 : amount);
+        },
+        0
+      );
 
-    const count = allExpenses.length;
+    const count =
+      allExpenses.length;
 
     const average =
       count > 0
@@ -211,44 +288,60 @@ window.onload = function () {
         : 0;
 
     const totalElement =
-      document.getElementById("totalExpenses");
+      document.getElementById(
+        "totalExpenses"
+      );
 
     const countElement =
-      document.getElementById("expenseCount");
+      document.getElementById(
+        "expenseCount"
+      );
 
     const averageElement =
-      document.getElementById("averageExpense");
+      document.getElementById(
+        "averageExpense"
+      );
 
     if (totalElement) {
+
       totalElement.textContent =
         `$${total.toFixed(2)}`;
     }
 
     if (countElement) {
-      countElement.textContent = count;
+
+      countElement.textContent =
+        count;
     }
 
     if (averageElement) {
+
       averageElement.textContent =
         `$${average.toFixed(2)}`;
     }
   }
 
   // =========================================================
-  // FILTER AND DISPLAY EXPENSES
+  // FILTER AND SORT
   // =========================================================
 
   function filterAndDisplayExpenses() {
 
     const searchElement =
-      document.getElementById("searchInput");
+      document.getElementById(
+        "searchInput"
+      );
 
     const sortElement =
-      document.getElementById("sortSelect");
+      document.getElementById(
+        "sortSelect"
+      );
 
     const searchTerm =
       searchElement
-        ? searchElement.value.toLowerCase()
+        ? searchElement.value
+            .toLowerCase()
+            .trim()
         : "";
 
     const sortOption =
@@ -256,23 +349,35 @@ window.onload = function () {
         ? sortElement.value
         : "date-desc";
 
-    // Filter expenses
+    // =====================================================
+    // FILTER
+    // =====================================================
+
     filteredExpenses =
       allExpenses.filter(expense => {
 
+        // Lambda uses "name"
         const purpose =
           (
             expense.purpose ||
+            expense.name ||
+            expense.category ||
             expense.description ||
             ""
-          ).toLowerCase();
+          )
+            .toString()
+            .toLowerCase();
 
+        // Lambda uses "expenseId"
         const expenseId =
           (
             expense.expense_id ||
+            expense.expenseId ||
             expense.id ||
             ""
-          ).toString().toLowerCase();
+          )
+            .toString()
+            .toLowerCase();
 
         return (
           purpose.includes(searchTerm) ||
@@ -280,7 +385,10 @@ window.onload = function () {
         );
       });
 
-    // Sort expenses
+    // =====================================================
+    // SORT
+    // =====================================================
+
     filteredExpenses.sort((a, b) => {
 
       switch (sortOption) {
@@ -318,15 +426,23 @@ window.onload = function () {
         case "amount-desc":
 
           return (
-            parseFloat(b.amount || 0) -
-            parseFloat(a.amount || 0)
+            parseFloat(
+              b.amount || 0
+            ) -
+            parseFloat(
+              a.amount || 0
+            )
           );
 
         case "amount-asc":
 
           return (
-            parseFloat(a.amount || 0) -
-            parseFloat(b.amount || 0)
+            parseFloat(
+              a.amount || 0
+            ) -
+            parseFloat(
+              b.amount || 0
+            )
           );
 
         default:
@@ -335,12 +451,11 @@ window.onload = function () {
       }
     });
 
-    // Display results
     displayExpenses();
   }
 
   // =========================================================
-  // DISPLAY EXPENSES IN TABLE
+  // DISPLAY EXPENSES
   // =========================================================
 
   function displayExpenses() {
@@ -351,13 +466,19 @@ window.onload = function () {
       );
 
     if (!tbody) {
+
       console.error(
         "expenseTableBody element not found."
       );
+
       return;
     }
 
     tbody.innerHTML = "";
+
+    // =====================================================
+    // NO RESULTS
+    // =====================================================
 
     if (filteredExpenses.length === 0) {
 
@@ -379,24 +500,40 @@ window.onload = function () {
       return;
     }
 
+    // =====================================================
+    // DISPLAY EACH EXPENSE
+    // =====================================================
+
     filteredExpenses.forEach(expense => {
 
       const row =
         document.createElement("tr");
 
+      // IMPORTANT:
+      // Lambda returns "expenseId"
       const expenseId =
+        expense.expenseId ||
         expense.expense_id ||
         expense.id ||
         "N/A";
 
+      // Amount
       const amount =
-        parseFloat(expense.amount || 0);
+        parseFloat(
+          expense.amount || 0
+        );
 
+      // IMPORTANT:
+      // Lambda returns "name"
+      // If name is null, use category
       const purpose =
+        expense.name ||
         expense.purpose ||
+        expense.category ||
         expense.description ||
         "N/A";
 
+      // Date
       const date =
         expense.date ||
         expense.timestamp;
@@ -405,7 +542,9 @@ window.onload = function () {
         <td>${expenseId}</td>
 
         <td class="amount-cell">
-          $${isNaN(amount) ? "0.00" : amount.toFixed(2)}
+          $${isNaN(amount)
+            ? "0.00"
+            : amount.toFixed(2)}
         </td>
 
         <td>${purpose}</td>
@@ -452,7 +591,7 @@ window.onload = function () {
   }
 
   // =========================================================
-  // GO BACK TO MAIN PAGE
+  // GO BACK TO DASHBOARD
   // =========================================================
 
   window.goBack = function () {
