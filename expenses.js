@@ -1,5 +1,5 @@
 window.onload = function () {
-      const API_ENDPOINT = "https://vntwsfhnwj.execute-api.ap-south-1.amazonaws.com/prod";
+      const API_ENDPOINT = "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod";
       
       let allExpenses = [];
       let filteredExpenses = [];
@@ -40,7 +40,7 @@ window.onload = function () {
           }
         };
 
-        fetch(API_ENDPOINT, requestConfig)
+        fetch(API_URL, requestConfig)
           .then(response => {
             if (!response.ok) {
               throw new Error(`HTTP error! status: ${response.status}`);

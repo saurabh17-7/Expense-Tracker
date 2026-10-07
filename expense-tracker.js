@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
       addBtn.value = "Adding...";
       addBtn.disabled = true;
 
-      fetch(API_ENDPOINT, {
+      fetch(API_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
