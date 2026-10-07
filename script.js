@@ -1,7 +1,7 @@
 // AWS Cognito Configuration
 const REGION = "ap-south-1";
-const USER_POOL_ID = "ap-south-1_Rpt02l1z7";
-const CLIENT_ID = "5nemt4bm5c7ekpngqsj7nob8lo";
+const USER_POOL_ID = "ap-south-1_blg4uqH43";
+const CLIENT_ID = "r5i433p111va6saf6dhkd46h9";
 const COGNITO_ENDPOINT = `https://cognito-idp.${REGION}.amazonaws.com/`;
 
 const headers = {
