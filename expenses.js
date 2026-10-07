@@ -1,5 +1,5 @@
 window.onload = function () {
-      const API_ENDPOINT = "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod";
+      const API_ENDPOINT = "https://n5qg4tv4f0.execute-api.ap-south-1.amazonaws.com/prod/expenses";
       
       let allExpenses = [];
       let filteredExpenses = [];
